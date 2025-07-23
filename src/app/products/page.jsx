@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '../../components/ProductCard';
 
-const ProductsPage = () => {
+const ProductsContent = () => {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -742,6 +742,25 @@ const ProductsPage = () => {
         </div>
       )}
     </div>
+  );
+};
+
+// 로딩 컴포넌트
+const LoadingFallback = () => (
+  <div className="min-h-screen gradient-bg flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+      <p className="text-slate-800 font-medium">페이지를 불러오는 중...</p>
+    </div>
+  </div>
+);
+
+// 메인 컴포넌트에서 Suspense로 감싸기
+const ProductsPage = () => {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ProductsContent />
+    </Suspense>
   );
 };
 
